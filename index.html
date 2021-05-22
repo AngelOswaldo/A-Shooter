@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A-Shooter</title>
+  <!-- User imports -->
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+  <script src="js/imports/aframe-super-shooter-kit.min.js"></script>
+  <script src="js/imports/aframe-proxy-event-component.min.js"></script>
+  <script src="js/main.js"></script>
+</head>
+
+<body>
+  <a-scene>
+    <!-- Assets -->
+    <a-assets>
+      <a-asset-item id="mdlGun" src="/models/dva/DVAGun.gltf"></a-asset-item>
+      <a-asset-item id="mdlLogo" src="/models/logo/logo.gltf"></a-asset-item>
+      <a-asset-item id="sndTheme" src="audio/theme.mp3" response-type="arraybuffer"></a-asset-item>
+      <a-asset-item id="sndShoot" src="audio/pop.ogg" response-type="arraybuffer"></a-asset-item>
+
+      <!-- Enemy Sounds -->
+      <a-asset-item id="sndHit" src="audio/hit.ogg" response-type="arraybuffer"></a-asset-item>
+      <a-asset-item id="sndDie" src="audio/die.ogg" response-type="arraybuffer"></a-asset-item>
+    </a-assets>
+
+    <!-- World -->
+    <a-entity environment="preset: egypt;"></a-entity>
+    <a-entity sound="src: #sndTheme; autoplay: true; positional:false; volume:0.05;"></a-entity>
+    <a-entity id="plyShoot" sound="src: #sndShoot; poolSize:10; autoplay: false; positional:true;"></a-entity>
+    <a-entity id="plyHit" sound="src: #sndHit; poolSize:10; autoplay: false; volume:0.05; positional:true;"></a-entity>
+    <a-entity id="plyDie" sound="src: #sndDie; poolSize:10; autoplay: false; positional:true;"></a-entity>
+
+    <!-- Prefab -->
+    <a-entity id="bulletTemplate" bullet geometry="primitive: sphere; radius: 0.1" material="color: orange"></a-entity>
+
+    <!-- Interactables -->
+    <a-entity class="target" target="healthPoints: 5" gltf-model="#mdlLogo" position="0 2 -4" hit-handler animation="property: rotation; to: 0 360 0; loop: true; dur: 2000; easing: linear;"
+    ></a-entity> 
+
+    <a-entity class="target" target="healthPoints: 5"  gltf-model="#mdlLogo" position="3.5 2 -3.5" hit-handler animation="property: position; to: 3.5 1.8 -3.5; loop: true; dur: 1000; easing: easeInOutSine; dir: alternate;" 
+    ></a-entity>
+
+    <a-entity class="target" target="healthPoints: 5"  gltf-model="#mdlLogo" position="-3.5 2 -3.5" hit-handler animation="property: position; to: -3.5 1.8 -3.5; loop: true; dur: 1000; easing: easeInOutSine; dir: alternate;" 
+    ></a-entity>
+
+    <!-- Player -->
+    <a-camera id="camera" position="0 1.6 0" shooter="bulletTypes: normal; activeBulletType: normal"
+      click-to-shoot></a-camera>
+    <a-entity id="rightGun"
+      vive-controls="hand: right; model: false;"
+      oculus-touch-controls="hand: right; model: false;"
+      daydream-controls="hand: right; model: false"
+      proxy-event__daydream="event: trackpaddown; to: #rightGun; as: triggerdown"
+      proxy-event__shoot="event: triggerdown; to: #rightGun; as: shoot"
+      proxy-event__shootsound="event: triggerdown; to: #soundShootRight; as: shoot"
+      shooter="bulletTypes: normal; activeBulletType: normal"
+      click-to-shoot position="0.291 -0.30716 -0.45">
+         <a-entity id="gun" gltf-model="#mdlGun" scale="0.1 0.1 0.1" rotation="0 180 0"></a-entity>
+    </a-entity>
+    
+  </a-scene>
+</body>
+</html>
